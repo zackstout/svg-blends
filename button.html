@@ -1,0 +1,99 @@
+<!-- stroke dash array and css transitions, pretty cool; https://www.youtube.com/watch?v=KT6YusE_7dk -->
+
+
+
+<!-- more: 
+https://www.youtube.com/watch?v=iYChMKXkGis
+https://www.youtube.com/watch?v=mDRt-pG7ZgQ
+
+https://www.youtube.com/watch?v=af4ZQJ14yu8
+(a bit on flexbox and order property)
+also shows pereserveASpectRatio="none"
+and using $0 in the console
+(also does stroke dash array) -->
+
+
+<!-- https://greensock.com/forums/topic/18128-svg-stroke-dasharray-quick-tip/
+on stroke dash array -->
+
+<!-- https://greensock.com/forums/topic/17919-stretchysquishy-line-animation/
+https://codepen.io/GreenSock/pen/MYMOpP?editors=011
+drawSVG as property to animate -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>button</title>
+    <style>
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+        }
+
+        svg {
+            height: 50%;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.2/TweenMax.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.2/TimelineMax.min.js"></script>
+</head>
+
+<body>
+    <svg viewBox="0 0 200 100">
+        <rect id="rect" fill="transparent" stroke="coral" x="50" y="30" height="40" width="100">
+    </svg>
+
+    <script>
+
+        const rect = document.getElementById("rect");
+        console.log(rect);
+
+        const anim = changeBorder();
+        rect.addEventListener('mouseover', function () {
+            console.log("in");
+            anim.play();
+        });
+
+        rect.addEventListener('mouseleave', function () {
+            console.log('out');
+            // console.log(anim);
+            anim.reverse();
+        });
+
+        function changeBorder() {
+            const tl = new TimelineMax({paused: true});
+
+            tl.to("#rect", 4, {
+                strokeDasharray: "22,2",
+                strokeDashoffset: "100",
+
+                attr: {
+                    // stroke: 'blue',
+                    // x: "100"
+                }
+            });
+
+            return tl;
+        }
+
+
+        // tl.to(rect, 1, {x: "+=100"});
+
+    </script>
+</body>
+
+</html>

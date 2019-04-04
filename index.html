@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Svg turb</title>
+    <style>
+        #cont {
+            height: 80vh;
+            width: 80vh;
+        }
+
+        body {
+            display: grid;
+            justify-content: center;
+            align-items: center;
+        }
+
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+        }
+
+        svg {
+            /* width: 60%; */
+            margin: 0;
+            display: block;
+        }
+
+        #start {
+            width: 15vh;
+            height: 6vh;
+        }
+
+        #inputs {
+            width: 60%;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.2/TweenMax.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.2/TimelineMax.min.js"></script>
+
+    <script src="anime.min.js"></script>
+</head>
+
+<body>
+    <div id='inputs'>
+        Base Frequency of turb: <input class='in' id='freq' type="text" value="0.04"><br>
+        Num Octaves: <input class='in' id='oct' type="text" value="2"><br>
+        X channel: <input class='in' id='xChan' type="text" value="R"><br>
+        Y channel: <input class='in' id='yChan' type="text" value="G">
+    </div>
+
+    <button id='start'>Start!</button>
+
+    <!-- Add "result" prop so you can pipe output of one filter as input into another: -->
+    <div id="cont">
+        <svg viewBox="0 0 200 200">
+            <filter id="dispFilter" y="-40%" x="-40%" height="180%" width="180%">
+                <feTurbulence id='turb' type="turbulence" baseFrequency="0.04" numOctaves="2" result="turbulence" />
+                <feDisplacementMap in2="turbulence" in="SourceGraphic" scale="50" xChannelSelector="R"
+                    yChannelSelector="G" />
+                <!-- change ychannel to R -->
+
+            </filter>
+            <!-- <path id='tri' style="filter: url(#dispFilter); transform-origin: center;" fill="white" stroke="green"
+                stroke-width="1vh" d="M100,56.7 L150,143.3 h-100 Z" /> -->
+            <circle id='circ' style="filter: url(#dispFilter);" cx="100" cy="100" r="40" fill="none" stroke="blue"
+                stroke-width="1vh" />
+        </svg>
+    </div>
+
+    <!-- d="M100,56.7 L150,143.3 h-100 Z" -->
+
+    <script>
+        // Could we also do with greensock?
+        // Yes, but anime is about 10x smoother! Huh!
+
+        document.querySelectorAll('.in').forEach(el => {
+            console.log(el);
+            el.addEventListener('input', function() {
+                console.log(el.value);
+                if (el.value) {
+                    document.getElementById('turb').setAttribute("baseFrequency", parseFloat(el.value));
+
+                }
+            });
+        });
+
+        const gs = new TimelineMax({ paused: true });
+        let tl = anime.timeline({
+            duration: 4000,
+            easing: 'easeInOutQuart',
+            autoplay: false
+        });
+
+        window.onkeydown = (ev) => {
+            if (ev.keyCode === 13) {
+                begin();
+            }
+        }
+        const btn = document.getElementById("start");
+        btn.addEventListener("click", begin);
+
+        function begin() {
+            console.log("click");
+            tl.play();
+        }
+
+        // GREENSOCK VERSION -- CURRENTLY MUCH CHOPPIER:
+        // gs.to(['#tri', 'feTurbulence, feDisplacementMap'], 10, {
+        //     attr: {
+        //         baseFrequency: 0,
+        //         numOctaves: 0,
+        //         scale: 1
+        //     }
+        // })
+
+
+
+
+
+        // tl.add({
+        //     targets: "svg",
+        //     keyframes: [
+        //         { scale: 0.3, rotate: "0deg" },
+        //         { scale: 0.5, rotate: "360deg" }
+        //     ],
+        //     duration: 3000
+        // });
+
+        tl.add({
+            targets: ["#tri", 'feTurbulence', 'feDisplacementMap'],
+            baseFrequency: 0,
+            numOctaves: 0,
+            scale: 1,
+            // rotate: "360deg",
+            // fill: '#f86a77',
+            // stroke: '#3a3a3a'
+            duration: 20000
+        }, "-=4000")
+    </script>
+
+</body>
+
+</html>
